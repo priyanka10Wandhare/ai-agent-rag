@@ -1,7 +1,3 @@
-Perfect — below is a **complete, submission-ready README.md** you can **copy-paste as is** into your repository.
-It is written exactly the way **reviewers, hiring managers, and evaluators expect**.
-
----
 
 # 🧠 AI Agent – RAG-Based Question Answering System
 
