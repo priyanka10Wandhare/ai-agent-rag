@@ -1,0 +1,21 @@
+Leave & Work Policy
+Organization: Voralto (SSYP Team, LLC)
+Document Type: Internal Work Guidelines
+
+1. Work Arrangement
+Voralto operates as a remote-first organization. Contractors and employees are responsible for maintaining a stable work environment suitable for remote work.
+
+2. Leave Policy (Contractors)
+As an independent contractor:
+- Leave is unpaid unless explicitly stated in the contract
+- Planned leave should be communicated in advance
+- Monthly work hours may be capped based on contract terms
+
+3. Working Hours
+Contractors are typically compensated on an hourly basis, capped at a defined monthly limit. Work hours must be tracked using company-approved tools when required.
+
+4. Performance Monitoring
+The company may use performance monitoring software (e.g., Time Doctor) to ensure productivity and compliance with contractual obligations.
+
+5. Compliance
+Failure to adhere to agreed schedules, reporting, or performance standards may impact contract continuation or compensation reviews.
