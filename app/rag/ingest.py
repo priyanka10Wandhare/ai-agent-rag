@@ -1,19 +1,10 @@
 import os
-import numpy as np
 from langchain_core.documents import Document
 from langchain_community.vectorstores import FAISS
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-# -----------------------------
-# Mock Embedding Class
-# -----------------------------
-class MockEmbeddings:
-    def embed_documents(self, texts):
-        # Create deterministic fake vectors
-        return [np.random.rand(1536).tolist() for _ in texts]
+from app.utils.azure_openai import get_embeddings
 
-    def embed_query(self, text):
-        return np.random.rand(1536).tolist()
 
 # -----------------------------
 # Load documents
@@ -24,7 +15,11 @@ def load_documents():
 
     for filename in os.listdir(docs_path):
         if filename.endswith(".txt"):
-            with open(os.path.join(docs_path, filename), "r", encoding="utf-8") as f:
+            with open(
+                os.path.join(docs_path, filename),
+                "r",
+                encoding="utf-8"
+            ) as f:
                 documents.append(
                     Document(
                         page_content=f.read(),
@@ -32,6 +27,7 @@ def load_documents():
                     )
                 )
     return documents
+
 
 # -----------------------------
 # Split documents
@@ -43,17 +39,24 @@ def split_documents(documents):
     )
     return splitter.split_documents(documents)
 
+
 # -----------------------------
-# Create FAISS Index
+# Create FAISS Index (Azure OpenAI)
 # -----------------------------
 def create_faiss_index(chunks):
-    embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
-    vectorstore = FAISS.from_documents(chunks, embeddings)
+    embeddings = get_embeddings()
 
-    os.makedirs("app/rag/faiss_index", exist_ok=True)
-    vectorstore.save_local("app/rag/faiss_index")
+    vectorstore = FAISS.from_documents(
+        documents=chunks,
+        embedding=embeddings
+    )
 
-    print("✅ Mock FAISS index created successfully.")
+    index_path = "app/rag/faiss_index"
+    os.makedirs(index_path, exist_ok=True)
+    vectorstore.save_local(index_path)
+
+    print("✅ FAISS index created successfully using Azure OpenAI embeddings.")
+
 
 # -----------------------------
 # Main
