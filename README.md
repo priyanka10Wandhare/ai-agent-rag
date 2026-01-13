@@ -1,97 +1,112 @@
+# **AI Agent RAG System (FastAPI + Azure OpenAI)**
 
-# 🧠 AI Agent – RAG-Based Question Answering System
+This project implements a **Retrieval-Augmented Generation (RAG) backend API** using **FastAPI**, **FAISS**, and **Azure OpenAI**.
+It supports querying company documents (policies, FAQs, etc.) through a semantic search pipeline powered by embeddings and large language models.
 
-## 📌 Overview
-
-This project implements an **AI-powered backend service** using **Retrieval-Augmented Generation (RAG)**.
-The system allows users to ask natural-language questions over internal documents and receive grounded answers with document sources.
-
-The application is built with **Python, FastAPI, FAISS**, and is designed to integrate with **Azure OpenAI** for enterprise deployment.
-For development and evaluation, **mock embeddings and a mock LLM** are used to avoid external API dependencies.
+The application is fully deployable on **Azure App Service** with **Azure OpenAI**.
 
 ---
 
-## 🚀 Key Features
-
-* 📄 Document ingestion and chunking
-* 🔍 Semantic retrieval using FAISS
-* 🧠 RAG pipeline (Retriever + Generator)
-* 💬 Session-based conversation memory
-* ⚡ FastAPI backend (`POST /ask`)
-* 🔐 Secure configuration using environment variables
-* ☁️ Azure deployment–ready architecture
-
----
-
-## 🏗️ Architecture
+## **Architecture Overview**
 
 ```
 User Query
-   ↓
+   |
 FastAPI (/ask)
-   ↓
-Session Memory
-   ↓
-FAISS Vector Store
-   ↓
-Relevant Document Chunks
-   ↓
-LLM (Mock / Azure OpenAI)
-   ↓
-Final Answer + Source Docs
+   |
+Retriever (FAISS Vector Search)
+   |
+Top-k Relevant Documents
+   |
+Azure OpenAI (GPT)
+   |
+Final Answer + Source Documents
 ```
 
 ---
 
-## 📁 Project Structure
+## **Project Structure**
 
 ```
-app/
- ├── api.py                # FastAPI backend
- ├── main.py               # Local RAG runner
- ├── rag/
- │   ├── retriever.py      # FAISS retrieval logic
- │   └── faiss_index/      # Vector index
- ├── memory/
- │   └── memory.py         # Conversation memory
-documents/
- ├── company_policy.txt
- ├── leave_policy.txt
- ├── product_faq.txt
-requirements.txt
-README.md
+ai-agent/
+│
+├── app/
+│   ├── __init__.py
+│   ├── main.py
+│   │
+│   ├── rag/
+│   │   ├── __init__.py
+│   │   ├── ingest.py      # Builds FAISS index from documents
+│   │   └── retriever.py   # Performs similarity search
+│   │
+│   ├── utils/
+│   │   ├── __init__.py
+│   │   └── azure_openai.py  # Azure OpenAI client
+│
+├── documents/            # Input knowledge base (TXT files)
+├── requirements.txt
+└── README.md
 ```
 
 ---
 
-## 🧪 Local Setup & Run
+## **Azure OpenAI Configuration**
 
-### 1️⃣ Create virtual environment
+The system uses **Azure OpenAI**, not OpenAI public API.
+
+### Required Azure resources
+
+* Azure OpenAI resource: `openai-agent-rag`
+* Embedding deployment: `embedding-model` (text-embedding-3-small)
+* Chat deployment: `chat-model` (gpt-4o-mini or GPT-35)
+
+---
+
+## **Environment Variables**
+
+These must be configured in **Azure App Service → Configuration → Application settings**
+
+| Name                               |Value                                                                                    |
+| ----------------------------------- | ---------------------------------------------------------------------------------------- |
+| `AZURE_OPENAI_API_KEY`              | Key from Azure OpenAI resource                                                           |
+| `AZURE_OPENAI_ENDPOINT`             | [https://openai-agent-rag.openai.azure.com/](https://openai-agent-rag.openai.azure.com/) |
+| `AZURE_OPENAI_API_VERSION`          | 2024-07-01-preview                                                                       |
+| `AZURE_OPENAI_CHAT_DEPLOYMENT`      | chat-model                                                                               |
+| `AZURE_OPENAI_EMBEDDING_DEPLOYMENT` | embedding-model                                                                          |
+
+---
+
+## **Install Locally**
 
 ```bash
-python -m venv venv
-source venv/bin/activate   # Windows: venv\Scripts\activate
-```
-
-### 2️⃣ Install dependencies
-
-```bash
+python -m venv .venv
+.\.venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 3️⃣ Build FAISS index
+---
+
+## **Build the Vector Database**
+
+Before running the API, documents must be embedded.
 
 ```bash
-python app/rag/ingest.py
+python -m app.rag.ingest
 ```
 
-### 4️⃣ Run FastAPI backend
+This creates:
+
+```
+app/rag/faiss_index/
+```
+
+---
+
+## **Run Locally**
 
 ```bash
-uvicorn app.api:app --reload
+python -m uvicorn app.main:app --reload
 ```
-
-### 5️⃣ Test API
 
 Open:
 
@@ -101,136 +116,82 @@ http://127.0.0.1:8000/docs
 
 ---
 
-## 🔗 API Specification
+## **API Usage**
 
-### `POST /ask`
+### Endpoint
 
-#### Request
+```
+POST /ask
+```
+
+### Request
 
 ```json
 {
-  "query": "What is the company leave policy?",
-  "session_id": "user123"
+  "query": "What is the leave policy?",
+  "session_id": "user1"
 }
 ```
 
-#### Response
+### Response
 
 ```json
 {
-  "answer": "Employees are entitled to paid leave as per company policy...",
+  "answer": "Employees are entitled to 20 paid leaves per year...",
   "source": ["leave_policy.txt"]
 }
 ```
 
 ---
 
-## 🧠 Conversation Memory
+## **Azure Deployment**
 
-* Maintains short-term chat context per `session_id`
-* Injects conversation history into the RAG prompt
-* Easily extendable to Redis / database for persistence
+### Startup Command (App Service → Configuration → General)
 
----
-
-## ⚙️ Embeddings & LLM Strategy
-
-### Current (Development Mode)
-
-* **MockEmbeddings** for FAISS indexing
-* **MockLLM** for answer generation
-
-### Production-Ready Support
-
-* Azure OpenAI Embeddings
-* Azure OpenAI Chat Models
-
-Switching to real models requires **no architectural changes**.
-
----
-
-## ☁️ Azure Deployment (Documented)
-
-### Target Azure Services
-
-* **Azure App Service** (Linux, Python 3.10)
-* **Azure OpenAI**
-
-  * Embedding model: `text-embedding-3-small`
-  * Chat model: `gpt-4o-mini` / `gpt-35-turbo`
-
-### Environment Variables
-
-```env
-AZURE_OPENAI_API_KEY=***
-AZURE_OPENAI_ENDPOINT=https://<resource>.openai.azure.com
-AZURE_OPENAI_API_VERSION=2024-02-15-preview
 ```
-
-### Startup Command
-
-```bash
-uvicorn app.api:app --host 0.0.0.0 --port 8000
-```
-
-### Deployment Status
-
-> Azure deployment is **fully documented and production-ready**.
-> Execution is blocked due to Azure OpenAI access and credit card restrictions on student accounts.
-
-The application can be deployed without code changes once access is available.
-
----
-
-## 🐳 Bonus: Docker Support (Optional)
-
-```dockerfile
-FROM python:3.10-slim
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-COPY . .
-CMD ["uvicorn", "app.api:app", "--host", "0.0.0.0", "--port", "8000"]
+gunicorn --chdir /home/site/wwwroot/ai-agent app.main:app --workers 2 --timeout 120
 ```
 
 ---
 
-## 📊 Logging & Monitoring
+## **Public API URL**
 
-* Uses Python logging
-* Compatible with **Azure Monitor / Log Stream**
-* Ready for observability integration
+```
+https://agent-openai-rag-e2hkcsfzbfekf9fz.centralindia-01.azurewebsites.net
+```
 
----
+Swagger:
 
-## 🔒 Security Best Practices
-
-* Secrets managed via environment variables
-* `.env` excluded from Git
-* No API keys committed to repository
+```
+/docs
+```
 
 ---
 
-## ✅ Evaluation Checklist
+## **Technologies Used**
 
-✔ RAG architecture
-✔ FAISS vector store
-✔ FastAPI backend
-✔ Memory support
-✔ Azure deployment design
-✔ Clean GitHub repo
-✔ Scalable & modular design
+* FastAPI
+* FAISS
+* LangChain
+* Azure OpenAI
+* Gunicorn
+* Azure App Service
 
 ---
 
-## 📌 Conclusion
+## **Assignment Compliance**
 
-This project demonstrates a **production-ready RAG system** with strong software engineering practices, cloud deployment readiness, and clear extensibility paths.
+| Requirement          | Status |
+| -------------------- | ------ |
+| RAG using embeddings | ✅      |
+| FAISS Vector DB      | ✅      |
+| Azure OpenAI         | ✅      |
+| FastAPI backend      | ✅      |
+| Azure deployment     | ✅      |
+| Public API           | ✅      |
 
-It is suitable for:
+---
 
-* AI Engineer assignments
-* Backend AI services
-* Enterprise knowledge assistants
+## **Author**
 
-
+Priyanka Wandhare
