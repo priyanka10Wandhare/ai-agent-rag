@@ -1,10 +1,10 @@
 Company Policy Document
-Organization: Voralto (SSYP Team, LLC)
+Organization: Stealth Startup Team, LLC
 Document Type: Internal Policy
-Last Updated: March 2025
+Last Updated: August 2023
 
 1. Company Overview
-Voralto is an AI-driven organization focused on serving individuals, teams, and organizations through innovative technology solutions. Our mission is to love and serve our neighbors, including clients, employees, partners, and the communities we operate in.
+Stealth Startup is an AI-driven organization focused on serving individuals, teams, and organizations through innovative technology solutions. Our mission is to love and serve our neighbors, including clients, employees, partners, and the communities we operate in.
 
 2. Core Values (PHHSX)
 All team members and contractors are expected to align with the following values:
@@ -15,16 +15,16 @@ All team members and contractors are expected to align with the following values
 - X-Factor: Execution with excellence and accountability.
 
 3. Engagement Model
-Voralto primarily works with independent contractors and full-time remote professionals. Engagement terms are governed by signed agreements and subject to performance reviews.
+Stealth Startup primarily works with independent contractors and full-time remote professionals. Engagement terms are governed by signed agreements and subject to performance reviews.
 
 4. Confidentiality & Intellectual Property
-All proprietary information, documents, code, and work products created during engagement are confidential and remain the sole property of the Company. Contractors must comply with all Non-Disclosure Agreements (NDA).
+All proprietary information, documents, code, and work products created during the engagement are confidential and remain the sole property of the Company. Contractors must comply with all Non-Disclosure Agreements (NDA).
 
 5. Professional Conduct
 All individuals are expected to:
 - Maintain professionalism in communication
 - Respect company policies and legal requirements
-- Protect company reputation and intellectual property
+- Protect company's reputation and intellectual property
 
 6. Amendments
 Company policies may only be amended through written agreements authorized by the Company.
