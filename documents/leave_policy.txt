@@ -3,7 +3,7 @@ Organization: Stealth Startup (SSYP Team, LLC)
 Document Type: Internal Work Guidelines
 
 1. Work Arrangement
-Voralto operates as a remote-first organization. Contractors and employees are responsible for maintaining a stable work environment suitable for remote work.
+Stealth Startup operates as a remote-first organization. Contractors and employees are responsible for maintaining a stable work environment suitable for remote work.
 
 2. Leave Policy (Contractors)
 As an independent contractor:
